@@ -55,24 +55,24 @@ const HomeScreen = () => {
   };
 
   return (
-    <div className={`flex flex-row w-full  bg-custom-green ${theme}`}>
+    <div className={`h-screen flex flex-row w-full   ${theme}`}>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <div className="w-1/3 overflow-auto bg-custom-green">
+          <div className="w-1/3 ">
             <RecitersScreen
               reciters={reciters}
               reciterHandler={reciterHandler}
             />
           </div>
-          <div className="w-1/3 overflow-auto bg-custom-green ">
+          <div className="w-1/3  ">
             <ChapterScreen
               chapters={chapters}
               chapterHandler={chapterHandler}
             />
           </div>
-          <div className="w-1/3 overflow-auto bg-custom-green">
+          <div className="w-1/3 ">
             <PlayerScreen
               reciterDetail={reciterDetail}
               chapterDetail={chapterDetail}

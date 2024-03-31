@@ -11,7 +11,7 @@ const PlayerScreen = ({ reciterDetail, chapterDetail,theme }) => {
   }, [chapterDetail, reciterDetail]);
 
   return (
-    <div className={` h-screen shadow-lg p-3 bg-custom-green overflow-y-auto flex flex-col justify-center items-center ${theme}`}>
+    <div className={`h-screen shadow-lg p-3 overflow-y-auto flex flex-col justify-center items-center ${theme}`}>
       <ph1 className="  text-2xl font-bold absolute top-1 border-b-2 ">Player</ph1> <hr />
       {reciterDetail !== null && chapterDetail !== null ? (
         <ul className="list-none text-left">

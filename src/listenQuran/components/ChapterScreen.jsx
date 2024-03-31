@@ -3,9 +3,8 @@ import React, { useState } from "react";
 const ChapterScreen = ({ chapters, chapterHandler }) => {
   const [activeId, setActiveId] = useState("");
   return (
-    
-    <div className="h-screen shadow-lg p-3 bg-custom-green overflow-y-auto mb-24">
-      <h1 className="text-lg font-bold text-center">Chapters</h1> 
+    <div className="h-screen shadow-lg p-3  overflow-y-auto mb-24">
+      <h1 className="text-lg font-bold text-center">Chapters</h1>
       <hr />
       <ul className="list-none text-right">
         {chapters && chapters.length > 0 ? (

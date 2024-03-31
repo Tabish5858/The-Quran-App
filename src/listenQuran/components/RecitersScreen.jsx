@@ -5,7 +5,7 @@ const RecitersScreen = ({ reciters, reciterHandler }) => {
   const [activeId, setActiveId] = useState('')
 
   return (
-    <div className='h-screen shadow-lg p-3 bg-custom-green overflow-y-auto '>
+    <div className='h-screen shadow-lg p-3 overflow-y-auto '>
       <h1 className='text-xl font-bold '>Reciters</h1> <hr />
       {reciters && reciters.length > 0 ? (
         reciters.map((reciter) => (
