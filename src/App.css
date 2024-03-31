@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+body {
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+}
+.home-body {
+  height: 100vh;
+}
+.bg-red {
+  color: #fff;
+}
+audio {
+  width: 100%;
+  outline: none;
+}
+
+.scroll {
+  height: 100%;
+  overflow: auto;
+}
+.curser {
+  cursor: pointer;
+}
+.active {
+  background-color: #1bb78b !important;
+  padding: 1rem;
+  border-radius: 0.4rem;
+}
+h1 {
+  font-size: 2rem;
+}
+

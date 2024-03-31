@@ -1,0 +1,17 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --background: #ffffff;
+  --text-primary: #000000;
+}
+[data-theme="dark"] {
+  --background: #000;
+  --text-primary: #ffffff;
+}
+.dark {
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: all 0.5s;
+}
