@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import LeftSection from "../../components/read-quran/LeftSection";
 import RightSection from "../../components/read-quran/RightSection";
 import { QuranApi } from "../../services/quran_api";
 import SkeletonLoader from "../../components/shared/SkeletonLoader";
 import { UseLocalStorage } from "../../theme/UseLocalStorage";
 
-const ReadQuran = () => {
+const ReadQuran = ({ navigateToSurah, navigateToAyat, clearNavigation }) => {
   const [listSurah, setListSurah] = useState([]);
   const [detailSurah, setDetailSurah] = useState({});
   const [loading, setLoading] = useState(true);
@@ -15,12 +15,19 @@ const ReadQuran = () => {
     "translation",
     "english"
   );
+
   // Keep track of the current surah number
   const [currentSurah, setCurrentSurah] = useState(null);
   const [transitionEffect, setTransitionEffect] = useState({
     opacity: 1,
     transform: "translateY(0)",
   });
+
+  // Store reference to the ayat to scroll to
+  const [targetAyat, setTargetAyat] = useState(null);
+
+  // Flag to track first load
+  const firstLoadRef = useRef(true);
 
   useEffect(() => {
     document.body.dataset.theme = theme;
@@ -29,6 +36,27 @@ const ReadQuran = () => {
   useEffect(() => {
     getSurah();
   }, []);
+
+  // Load first surah by default when surah list is available
+  useEffect(() => {
+    if (listSurah.length > 0 && firstLoadRef.current && !navigateToSurah) {
+      // Only load the first surah if we're not navigating from a bookmark
+      getDetailSurah(1); // 1 is Al-Fatihah (the first surah)
+      firstLoadRef.current = false;
+    }
+  }, [listSurah, navigateToSurah]);
+
+  // Handle navigation from bookmark
+  useEffect(() => {
+    if (navigateToSurah && navigateToAyat && listSurah.length > 0) {
+      setTargetAyat(navigateToAyat);
+      getDetailSurah(navigateToSurah);
+      firstLoadRef.current = false; // Mark first load as complete since we're loading a specific surah
+
+      // Clear navigation params after handling them
+      if (clearNavigation) clearNavigation();
+    }
+  }, [navigateToSurah, navigateToAyat, listSurah]);
 
   // When translation changes, refetch the current surah if any and add effect
   useEffect(() => {
@@ -131,6 +159,8 @@ const ReadQuran = () => {
               theme={theme}
               translation={translation}
               setTranslation={setTranslation}
+              targetAyat={targetAyat}
+              clearTargetAyat={() => setTargetAyat(null)}
             />
           </div>
         </>

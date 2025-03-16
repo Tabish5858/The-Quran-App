@@ -6,12 +6,33 @@
   --background: #ffffff;
   --text-primary: #000000;
 }
+
 [data-theme="dark"] {
   --background: #000;
   --text-primary: #ffffff;
 }
+
+/* Apply dark theme by default */
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: all 0.5s;
+}
+
 .dark {
   background-color: var(--background);
   color: var(--text-primary);
   transition: all 0.5s;
+}
+
+/* Add additional dark mode specific styles */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1a1a1a;
+  color: var(--text-primary);
+}
+
+html.dark {
+  color-scheme: dark;
 }

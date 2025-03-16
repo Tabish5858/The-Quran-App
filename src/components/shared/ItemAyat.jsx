@@ -9,14 +9,18 @@ const ItemAyat = ({
   theme,
   fontSize,
   translation = "english",
+  displayConfig = {
+    showAyatNumber: false,
+    showRightAyatNumber: true,
+  },
 }) => {
   const [translatedText, setTranslatedText] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Debugging helper - log data on initial render
   useEffect(() => {
-    console.log("ItemAyat data:", data);
-    console.log("Current translation setting:", translation);
+    // console.log("ItemAyat data:", data);
+    // console.log("Current translation setting:", translation);
   }, []);
 
   // Get translation either from provided data or from translation API
@@ -123,20 +127,42 @@ const ItemAyat = ({
     return "Translation not available";
   };
 
+  // Function to clean the ayat text by removing the ayat number prefix
+  const cleanArabicText = (text) => {
+    if (!text) return "";
+
+    // Remove numbered prefixes like "1." or "2." at the beginning of the text
+    return text.replace(/^\d+\.\s*/, "");
+  };
+
   return (
     <div
       className={`w-full px-10 py-6 border-b border-gray-400 mb-12 relative ${theme}`}
       style={{ fontSize: `${fontSize}px` }}
     >
-      <div className="w-full h-full flex justify-end mb-2">
-        <h3 className="font-normal" style={{ fontSize: `${fontSize}px` }}>
-          {data.ar}
+      {/* Arabic text section with ayat number on right if enabled */}
+      <div className="w-full h-full flex justify-end mb-2 relative">
+        {displayConfig.showRightAyatNumber && (
+          <div className="absolute right-0 -mr-10 mt-3 text-teal-600 font-semibold text-2xl">
+            -
+            {data.nomor}
+          </div>
+        )}
+        <h3
+          className="font-normal text-right"
+          style={{ fontSize: `${fontSize}px` }}
+        >
+          {cleanArabicText(data.ar)}
         </h3>
       </div>
 
+      {/* Transliteration section */}
       <div className="w-full h-full flex justify-end mb-6">
-        <span className="font-light" style={{ fontSize: `${fontSize - 16}px` }}>
-          {data.tr}
+        <span
+          className="font-light text-right"
+          style={{ fontSize: `${fontSize - 16}px` }}
+        >
+          {cleanArabicText(data.tr)}
         </span>
       </div>
 
@@ -146,13 +172,17 @@ const ItemAyat = ({
           className="font-light text-left"
           style={{ fontSize: `${fontSize - 4}px` }}
         >
-          {getTranslation()}
+          {cleanArabicText(getTranslation())}
         </p>
       </div>
 
-      <span className="font-light" style={{ fontSize: `${fontSize}px` }}>
-        {data.nomor}.{data.idh || ""}
-      </span>
+      {/* Only show ayat number if explicitly enabled */}
+      {displayConfig.showAyatNumber && (
+        <span className="font-light" style={{ fontSize: `${fontSize - 2}px` }}>
+          {data.nomor}.{data.idh || ""}
+        </span>
+      )}
+
       {showIconBookmark ? (
         <IconBookMark
           data={data}

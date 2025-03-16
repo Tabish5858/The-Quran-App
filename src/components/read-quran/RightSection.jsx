@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import HeaderSection from "./HeaderSection";
 import ItemAyat from "../shared/ItemAyat";
 import { Utils } from "../../utils";
@@ -11,6 +11,8 @@ const RightSection = ({
   theme,
   translation,
   setTranslation,
+  targetAyat,
+  clearTargetAyat,
 }) => {
   const [onBookmark, setOnBookMark] = useState({});
   const [fontSize, setFontSize] = UseLocalStorage("fontSize", 16);
@@ -18,7 +20,11 @@ const RightSection = ({
     opacity: 1,
     transform: "translateY(0)",
   });
+  const contentRef = useRef(null);
+  const ayatRefs = useRef({});
+  const scrollAttemptRef = useRef(0); // Track scroll attempts
 
+  // Update the setBookmark function to ensure we're storing all required properties
   function setBookmark(value) {
     const bookmark = Utils.getBookmark();
 
@@ -27,8 +33,19 @@ const RightSection = ({
       return Utils.removeBookmark();
     }
 
-    Utils.setBookmark({ ...value, namaSurah: detailSurah.nama_latin });
-    setOnBookMark({ ...value, namaSurah: detailSurah.nama_latin });
+    // Make sure we have surah number in the bookmark
+    const bookmarkData = {
+      ...value,
+      namaSurah: detailSurah.nama_latin,
+      // Ensure these critical fields are set properly
+      surah: value.surah || detailSurah.nomor, // Use detailSurah.nomor instead of currentSurah
+    };
+
+    // Log what we're storing
+    console.log("Storing bookmark:", bookmarkData);
+
+    Utils.setBookmark(bookmarkData);
+    setOnBookMark(bookmarkData);
   }
 
   // Apply transition effect when translation changes
@@ -48,12 +65,82 @@ const RightSection = ({
     return () => clearTimeout(timer);
   }, [translation]);
 
+  // Load bookmarks
   useEffect(() => {
     const bookmark = Utils.getBookmark();
     if (bookmark) {
       setOnBookMark(bookmark);
     }
   }, []);
+
+  // Scroll to target ayat if specified
+  useEffect(() => {
+    if (!loadingDetail && targetAyat && detailSurah.ayat) {
+      console.log(`Attempting to scroll to ayat ${targetAyat}`);
+
+      // Reset scroll attempt counter when new target is set
+      if (scrollAttemptRef.current === 0) {
+        scrollAttemptRef.current = 3; // Allow up to 3 attempts
+      }
+
+      const attemptScroll = () => {
+        if (ayatRefs.current[targetAyat]) {
+          console.log(`Found ayat ${targetAyat} ref, scrolling`);
+
+          ayatRefs.current[targetAyat].scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+          // Add a highlight effect to the target ayat
+          const element = ayatRefs.current[targetAyat];
+          element.classList.add("bg-teal-50", "dark:bg-teal-900/30");
+
+          setTimeout(() => {
+            element.classList.remove("bg-teal-50", "dark:bg-teal-900/30");
+          }, 2000);
+
+          // Reset counter and clear target
+          scrollAttemptRef.current = 0;
+          clearTargetAyat();
+          return true;
+        }
+
+        return false;
+      };
+
+      // Try to scroll immediately
+      if (!attemptScroll()) {
+        // If immediate scroll fails, try with increasing delays
+        const timer1 = setTimeout(() => {
+          if (!attemptScroll() && scrollAttemptRef.current > 0) {
+            scrollAttemptRef.current--;
+
+            const timer2 = setTimeout(() => {
+              if (!attemptScroll() && scrollAttemptRef.current > 0) {
+                scrollAttemptRef.current--;
+
+                const timer3 = setTimeout(() => {
+                  if (!attemptScroll()) {
+                    // Give up after all attempts
+                    console.log("Failed to scroll after multiple attempts");
+                    scrollAttemptRef.current = 0;
+                    clearTargetAyat();
+                  }
+                }, 1000);
+
+                return () => clearTimeout(timer3);
+              }
+            }, 500);
+
+            return () => clearTimeout(timer2);
+          }
+        }, 200);
+
+        return () => clearTimeout(timer1);
+      }
+    }
+  }, [loadingDetail, targetAyat, detailSurah]);
 
   function isNotEmpty() {
     return Object.keys(detailSurah).length > 0;
@@ -81,6 +168,7 @@ const RightSection = ({
             setTranslation={setTranslation}
           />
           <div
+            ref={contentRef}
             className={`flex-grow overflow-y-auto ${theme}`}
             style={{
               scrollBehavior: "smooth",
@@ -96,16 +184,34 @@ const RightSection = ({
             >
               {detailSurah.ayat &&
                 detailSurah.ayat.map((data, index) => (
-                  <ItemAyat
+                  <div
                     key={index}
-                    data={data}
-                    setBookmark={setBookmark}
-                    onBookmark={onBookmark}
-                    showIconBookmark={true}
-                    theme={theme}
-                    fontSize={fontSize}
-                    translation={translation}
-                  />
+                    ref={(el) => (ayatRefs.current[data.nomor] = el)}
+                    className={`transition-colors duration-500 ${
+                      targetAyat === data.nomor ? "scroll-mt-24" : ""
+                    }`}
+                    id={`ayat-${data.nomor}`}
+                  >
+                    <ItemAyat
+                      data={{
+                        ...data,
+                        surah: detailSurah.nomor,
+                        // Add an explicit showAyatNumber flag
+                        showAyatNumber: false,
+                      }}
+                      setBookmark={setBookmark}
+                      onBookmark={onBookmark}
+                      showIconBookmark={true}
+                      theme={theme}
+                      fontSize={fontSize}
+                      translation={translation}
+                      // Pass an explicit display configuration
+                      displayConfig={{
+                        showAyatNumber: false, // Don't show ayat number in text
+                        showRightAyatNumber: true, // Show ayat number on right side
+                      }}
+                    />
+                  </div>
                 ))}
             </div>
           </div>
