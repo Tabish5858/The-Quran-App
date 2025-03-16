@@ -1,13 +1,83 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Living Quran</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <title>The Living Quran - Read, Listen, and Learn the Holy Quran</title>
+  <meta name="title" content="The Living Quran - Read, Listen, and Learn the Holy Quran">
+  <meta name="description"
+    content="An interactive Quran application that allows you to read the Holy Quran with translations, listen to recitations by renowned reciters, and bookmark your favorite verses.">
+  <meta name="keywords"
+    content="quran, holy quran, quran app, islamic app, quran reader, quran translations, quran recitations, quran bookmarks">
+  <meta name="author" content="The Living Quran">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="7 days">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thelivingquran.app/">
+  <meta property="og:title" content="The Living Quran - Read, Listen, and Learn the Holy Quran">
+  <meta property="og:description"
+    content="An interactive Quran application that allows you to read the Holy Quran with translations, listen to recitations by renowned reciters, and bookmark your favorite verses.">
+  <meta property="og:image" content="/logo-banner.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://thelivingquran.app/">
+  <meta property="twitter:title" content="The Living Quran - Read, Listen, and Learn the Holy Quran">
+  <meta property="twitter:description"
+    content="An interactive Quran application that allows you to read the Holy Quran with translations, listen to recitations by renowned reciters, and bookmark your favorite verses.">
+  <meta property="twitter:image" content="/logo-banner.png">
+
+  <!-- App Specific -->
+  <meta name="application-name" content="The Living Quran">
+  <meta name="apple-mobile-web-app-title" content="The Living Quran">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f766e">
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/svg+xml" href="/logo.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Preconnect to APIs -->
+  <link rel="preconnect" href="https://equran.id">
+  <link rel="preconnect" href="https://api.qurancdn.com">
+  <link rel="preconnect" href="https://api.alquran.cloud">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://thelivingquran.app/">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "The Living Quran",
+        "description": "An interactive Quran application that allows you to read the Holy Quran with translations, listen to recitations by renowned reciters, and bookmark your favorite verses.",
+        "applicationCategory": "ReligiousApp",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "screenshot": "/app-screenshot.png",
+        "featureList": "Read Quran, Listen to Recitations, Bookmarks, Multiple Translations"
+      }
+    </script>
+</body>
+
 </html>
