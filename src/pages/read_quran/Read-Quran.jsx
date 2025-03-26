@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LeftSection from "../../components/read-quran/LeftSection";
 import RightSection from "../../components/read-quran/RightSection";
-import { QuranApi } from "../../services/quran_api";
 import SkeletonLoader from "../../components/shared/SkeletonLoader";
+import { QuranApi } from "../../services/quran_api";
 import { UseLocalStorage } from "../../theme/UseLocalStorage";
 
 const ReadQuran = ({ navigateToSurah, navigateToAyat, clearNavigation }) => {
@@ -15,6 +15,7 @@ const ReadQuran = ({ navigateToSurah, navigateToAyat, clearNavigation }) => {
     "translation",
     "english"
   );
+  const [showSurahList, setShowSurahList] = useState(false);
 
   // Keep track of the current surah number
   const [currentSurah, setCurrentSurah] = useState(null);
@@ -108,6 +109,7 @@ const ReadQuran = ({ navigateToSurah, navigateToAyat, clearNavigation }) => {
   async function getDetailSurah(nomor) {
     setCurrentSurah(nomor);
     setLoadingDetail(true);
+    setShowSurahList(false); // Hide surah list on mobile when selecting a surah
     try {
       const detail = await QuranApi.getDetailSurah(nomor, translation);
       if (detail) {
@@ -122,31 +124,65 @@ const ReadQuran = ({ navigateToSurah, navigateToAyat, clearNavigation }) => {
     }
   }
 
+  const toggleSurahList = () => {
+    setShowSurahList(!showSurahList);
+  };
+
   return (
-    <div className="flex w-full h-screen overflow-hidden">
+    <div className="flex flex-col md:flex-row w-full h-screen overflow-hidden">
       {loading ? (
-        <div className="flex w-full">
+        <div className="flex flex-col md:flex-row w-full">
           {/* Skeleton for left section */}
-          <div className="basis-1/4 border-r border-gray-200">
+          <div className="hidden md:block md:basis-1/4 lg:basis-1/4 border-r border-gray-200">
             <SkeletonLoader type="sidebarList" />
           </div>
 
           {/* Skeleton for right section */}
-          <div className="basis-3/4">
+          <div className="basis-full md:basis-3/4 lg:basis-3/4">
             <SkeletonLoader type="content" />
           </div>
         </div>
       ) : (
         <>
-          <LeftSection
-            listSurah={listSurah ?? []}
-            getDetailSurah={getDetailSurah}
-            theme={theme}
-            translation={translation}
-            currentSurah={currentSurah}
-          />
+          {/* Mobile Surah Selector Button - only visible on mobile */}
+          <div className="md:hidden flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-800">
+            <h2 className="font-semibold text-lg">
+              {detailSurah.nama_latin || "Select Surah"}
+            </h2>
+            <button
+              onClick={toggleSurahList}
+              className="px-4 py-1 bg-teal-700 text-white rounded-md flex items-center"
+            >
+              <span>{showSurahList ? "Hide" : "Show"} Surahs</span>
+            </button>
+          </div>
+
+          {/* Left Section - hidden on mobile by default, shown when toggled */}
           <div
-            className="basis-3/4"
+            className={`${
+              showSurahList ? "block" : "hidden"
+            } md:block fixed md:relative z-30 w-full md:w-auto md:basis-1/4 lg:basis-1/4 h-screen md:h-auto border-r border-gray-200 bg-white dark:bg-gray-900`}
+          >
+            <LeftSection
+              listSurah={listSurah ?? []}
+              getDetailSurah={getDetailSurah}
+              theme={theme}
+              translation={translation}
+              currentSurah={currentSurah}
+            />
+          </div>
+
+          {/* Overlay to close surah list when clicking outside on mobile */}
+          {showSurahList && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+              onClick={() => setShowSurahList(false)}
+            ></div>
+          )}
+
+          {/* Right Section - always visible, takes full width on mobile */}
+          <div
+            className="basis-full md:basis-3/4 lg:basis-3/4 relative"
             style={{
               opacity: transitionEffect.opacity,
               transform: transitionEffect.transform,

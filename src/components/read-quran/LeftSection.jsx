@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import LisstSurah from "./LisstSurah";
-import InputSearch from "./InputSearch";
+import React, { useEffect, useState } from "react";
 import SkeletonLoader from "../shared/SkeletonLoader";
+import InputSearch from "./InputSearch";
+import LisstSurah from "./LisstSurah";
 
 const LeftSection = ({
   listSurah,
@@ -62,10 +62,10 @@ const LeftSection = ({
 
   return (
     <div
-      className={`bg-white basis-1/4 flex flex-col border-r border-gray-200 ${theme}`}
+      className={`bg-white w-full flex flex-col border-r border-gray-200 ${theme}`}
       style={{
         transition: "all 0.3s ease",
-        height: "100vh", // Ensure full height
+        height: "100%", // Use 100% instead of 100vh to fit parent container
       }}
     >
       <div
@@ -76,12 +76,14 @@ const LeftSection = ({
           transition: "opacity 0.3s ease, transform 0.3s ease",
         }}
       >
-        <InputSearch
-          value={search}
-          onChange={onChangeHandler}
-          theme={theme}
-          placeholder={searchPlaceholder}
-        />
+        <div className="p-2 md:p-4">
+          <InputSearch
+            value={search}
+            onChange={onChangeHandler}
+            theme={theme}
+            placeholder={searchPlaceholder}
+          />
+        </div>
 
         <div className="overflow-y-auto flex-grow">
           {listSurah.length > 0 ? (
@@ -92,7 +94,7 @@ const LeftSection = ({
               currentSurah={currentSurah}
             />
           ) : (
-            <div className="h-full w-full p-8">
+            <div className="h-full w-full p-4 md:p-8">
               <SkeletonLoader type="sidebarList" count={5} />
             </div>
           )}

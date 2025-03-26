@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import HeaderSection from "./HeaderSection";
-import ItemAyat from "../shared/ItemAyat";
-import { Utils } from "../../utils";
+import React, { useEffect, useRef, useState } from "react";
 import { UseLocalStorage } from "../../theme/UseLocalStorage";
+import { Utils } from "../../utils";
+import ItemAyat from "../shared/ItemAyat";
 import SkeletonLoader from "../shared/SkeletonLoader";
+import HeaderSection from "./HeaderSection";
 
 const RightSection = ({
   detailSurah,
@@ -149,14 +149,14 @@ const RightSection = ({
   // If loading, show skeleton loader instead of the Home component
   if (loadingDetail) {
     return (
-      <div className={`bg-white basis-3/4 flex-col h-screen ${theme}`}>
+      <div className={`bg-white w-full flex-col h-screen ${theme}`}>
         <SkeletonLoader type="content" count={3} />
       </div>
     );
   }
 
   return (
-    <div className={`bg-white basis-3/4 flex flex-col h-screen ${theme}`}>
+    <div className={`bg-white w-full flex flex-col h-screen ${theme}`}>
       {isNotEmpty() ? (
         <>
           <HeaderSection
@@ -169,7 +169,7 @@ const RightSection = ({
           />
           <div
             ref={contentRef}
-            className={`flex-grow overflow-y-auto ${theme}`}
+            className={`flex-grow overflow-y-auto px-2 sm:px-4 md:px-6 ${theme}`}
             style={{
               scrollBehavior: "smooth",
               height: "calc(100vh - 84px)", // Subtract header height (84px)
@@ -217,14 +217,20 @@ const RightSection = ({
           </div>
         </>
       ) : (
-        <div className="h-full w-full flex justify-center items-center">
+        <div className="h-full w-full flex justify-center items-center p-4">
           <div className="text-center">
-            <img src="logo.png" alt="logo" className="mx-auto w-20 h-20 mb-4" />
-            <h3 className="text-2xl font-medium text-teal-700">
+            <img
+              src="/logo.png"
+              alt="logo"
+              className="mx-auto w-16 h-16 md:w-20 md:h-20 mb-4"
+            />
+            <h3 className="text-xl md:text-2xl font-medium text-teal-700">
               Select a Surah to begin reading
             </h3>
-            <p className="text-gray-500 mt-2">
-              Choose from the list on the left
+            <p className="text-gray-500 mt-2 text-sm md:text-base">
+              {window.innerWidth < 768
+                ? "Click Show Surahs"
+                : "Choose from the list on the left"}
             </p>
           </div>
         </div>

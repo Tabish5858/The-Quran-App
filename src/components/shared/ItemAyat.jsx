@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { QuranApi } from "../../services/quran_api";
 
 const ItemAyat = ({
@@ -135,42 +135,45 @@ const ItemAyat = ({
     return text.replace(/^\d+\.\s*/, "");
   };
 
+  // Calculate responsive font sizes based on screen size and base fontSize
+  const arabicFontSize = fontSize;
+  const transliterationFontSize = Math.max(fontSize - 16, 10); // Min size of 10px
+  const translationFontSize = Math.max(fontSize - 4, 12); // Min size of 12px
+
   return (
     <div
-      className={`w-full px-10 py-6 border-b border-gray-400 mb-12 relative ${theme}`}
-      style={{ fontSize: `${fontSize}px` }}
+      className={`w-full px-2 sm:px-5 md:px-10 py-3 sm:py-4 md:py-6 border-b border-gray-400 mb-8 sm:mb-10 md:mb-12 relative ${theme}`}
     >
       {/* Arabic text section with ayat number on right if enabled */}
       <div className="w-full h-full flex justify-end mb-2 relative">
         {displayConfig.showRightAyatNumber && (
-          <div className="absolute right-0 -mr-10 mt-3 text-teal-600 font-semibold text-2xl">
-            -
-            {data.nomor}
+          <div className="absolute right-0 -mr-2 sm:-mr-6 md:-mr-10 mt-1 sm:mt-2 md:mt-3 text-teal-600 font-semibold text-lg sm:text-xl md:text-2xl">
+            -{data.nomor}
           </div>
         )}
         <h3
           className="font-normal text-right"
-          style={{ fontSize: `${fontSize}px` }}
+          style={{ fontSize: `${arabicFontSize}px` }}
         >
           {cleanArabicText(data.ar)}
         </h3>
       </div>
 
       {/* Transliteration section */}
-      <div className="w-full h-full flex justify-end mb-6">
+      <div className="w-full h-full flex justify-end mb-3 sm:mb-4 md:mb-6">
         <span
           className="font-light text-right"
-          style={{ fontSize: `${fontSize - 16}px` }}
+          style={{ fontSize: `${transliterationFontSize}px` }}
         >
           {cleanArabicText(data.tr)}
         </span>
       </div>
 
       {/* Translation section */}
-      <div className="w-full h-full mb-6">
+      <div className="w-full h-full mb-3 sm:mb-4 md:mb-6">
         <p
           className="font-light text-left"
-          style={{ fontSize: `${fontSize - 4}px` }}
+          style={{ fontSize: `${translationFontSize}px` }}
         >
           {cleanArabicText(getTranslation())}
         </p>
@@ -201,14 +204,13 @@ export default ItemAyat;
 function IconBookMark({ onBookmark, data, setBookmark }) {
   return (
     <div
-      className="h-10 w-10 absolute bottom-[-25px] left-4"
+      className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 absolute bottom-[-20px] sm:bottom-[-22px] md:bottom-[-25px] left-2 sm:left-3 md:left-4"
       onClick={() => setBookmark(data)}
     >
       <img
         src={onBookmark.id === data.id ? "bookmarkSave.png" : "bookmark.png"}
         alt={onBookmark.id === data.id ? "bookmarkSave.png" : "bookmark.png"}
-        height={30}
-        width={30}
+        className="w-full h-full"
       />
     </div>
   );
